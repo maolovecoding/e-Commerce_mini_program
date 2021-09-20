@@ -1,0 +1,5 @@
+{
+  "usingComponents": {
+    "m-category-grid":"/components/category-grid/index"
+  }
+}

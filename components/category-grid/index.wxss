@@ -1,0 +1,38 @@
+/* components/category-grid/index.wxss */
+
+.container {
+  height: 320rpx;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  /* 水平 垂直 居中 */
+  justify-content: center;
+  align-items: center;
+}
+
+/* 宫格容器 */
+.inner-conatiner {
+  width: 730rpx;
+  height: 300rpx;
+  border: 1px dashed #DCEBE6;
+}
+
+/* 宫格的样式 */
+.grid-item {
+  width: 200rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.img {
+  height: 60rpx;
+  width: 60rpx;
+}
+
+/* 文本 */
+.grid-item text {
+  margin-top: 6rpx;
+  font-size: 24rpx;
+  color: #333333;
+}
