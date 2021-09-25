@@ -1,0 +1,17 @@
+/* components/spu-scroll/index.wxss */
+.title {
+    width: 692rpx;
+    height: 90rpx;
+}
+
+/*价格的外部样式*/
+/* 一般外部样式类，需要加大权重 */
+.price-unit {
+    font-size: 26rpx !important;
+    /* color:#157658 !important; */
+}
+
+.price-value {
+    font-size: 32rpx !important;
+    font-weight: 800;
+}

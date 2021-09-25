@@ -1,0 +1,20 @@
+<!--components/spu-scroll/index.wxml-->
+
+<view class="container">
+    <!--标题大图-->
+    <image src="{{theme.title_img}}" class="title"></image>
+    <scroll-view>
+        <block wx:for="{{spuList}}" wx:key="id">
+            <view>
+                <!-- 图片，价格，文本 -->
+                <image src="{{item.img}}"></image>
+                <l-price l-unit-class="price-unit"
+                         autofix
+                         l-value-class="price-value"
+                         color="#157658"
+                         value="{{item.price}}"/>
+                <text>{{item.title}}</text>
+            </view>
+        </block>
+    </scroll-view>
+</view>

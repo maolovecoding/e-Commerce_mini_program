@@ -1,16 +1,26 @@
 <!--pages/home/home.wxml-->
-<view>
+<view class="container">
     <!-- 大图-->
-    <image class="top-theme" src="{{themeA.entrance_img}}" />
+    <image class="top-theme" src="{{themeA.entrance_img}}"/>
     <!-- 容器也必须指定 高和宽才能生效 -->
     <swiper class="swiper" indicator-dots autoplay interval="2000" duration="1000" indicator-active-color="#157658"
-        circular>
+            circular>
         <!-- 渲染轮播图 -->
         <block wx:for="{{bannerB.items}}" wx:key="id">
             <swiper-item>
-                <image class="swiper" src="{{item.img}}" />
+                <image class="swiper" src="{{item.img}}"/>
             </swiper-item>
         </block>
     </swiper>
+    <!--    宫格数据-->
     <m-category-grid grids="{{grids}}"/>
+    <!--    优惠券活动数据-->
+    <image class="activity" src="{{activityD.entrance_img}}"/>
+
+    <!-- 主题E -->
+    <m-spu-scroll wx:if="{{themeE.online}}"
+                  theme="{{themeE}}"
+                  spu-list="{{themeESpuList}}"/>
+
+
 </view>

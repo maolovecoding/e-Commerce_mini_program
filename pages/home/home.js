@@ -3,6 +3,7 @@
 import {Theme} from "../../models/theme.js"
 import {Banner} from "../../models/banner";
 import {Category} from "../../models/category";
+import {Activity} from "../../models/activity";
 
 Page({
 
@@ -12,10 +13,15 @@ Page({
   data: {
     // 头部主题
     themeA: null,
+    // 主题E 每周上新
+    themeE: null,
+    themeESpuList:[],
     //  广告
     bannerB: null,
     // 宫格数据
-    grids: []
+    grids: [],
+    // 优惠券
+    activityD: null
   },
 
   /**
@@ -47,16 +53,40 @@ Page({
    */
   async initAllData() {
     // 请求获取数据 主题
-    const themeA = await Theme.getHomeLocationA();
+    // const themeA = await Theme.getHomeLocationA();
+    // 获取所有的主题数据
+    const theme = new Theme();
+    await theme.getThemes();
+    const themeA = await theme.getHomeLocationA();
+    // 主题E
+    const themeE = await theme.getHomeLocationE();
+    // 判断专题E是否还在上架
+    let themeESpuList;
+    if (themeE.online) { // 上架，才需要获取这个专题的详细数据
+      // 获取主题E的spu商品详细数据
+      const data = await Theme.getHomeLocationESpu();
+      console.log(data);
+      // 只展示专题的部分数据，剩余的数据通过点击 跳转到新页面查看
+      if (data) {
+        themeESpuList = data.spu_list.slice(0, 8);
+      }
+    }
+
     // 获取横幅广告，轮播图
     const bannerB = await Banner.getHomeLocationB();
     // 获取宫格数据
-    const grids = await Category.getGridCategory();
+    const grids = await Category.getHomeLocationC();
+    // 获取优惠券数据
+    const activityD = await Activity.getHomeLocationD();
     console.log(grids);
     this.setData({
-      themeA: themeA[0],
+      // themeA: themeA[0],
+      themeA,
       bannerB,
-      grids
+      grids,
+      activityD,
+      themeE,
+      themeESpuList
     });
   }
 })

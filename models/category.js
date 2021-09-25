@@ -11,10 +11,9 @@ class Category {
    * 获取宫格区域的数据
    * @return {Promise<void>}
    */
-  static async getGridCategory() {
+  static async getHomeLocationC() {
     return await Http.request({
       url: "category/grid/all",
-
     })
   }
 }
