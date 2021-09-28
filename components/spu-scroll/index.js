@@ -1,5 +1,6 @@
 // components/spu-scroll/index.js
 Component({
+  externalClasses: ["m-class"],
   /**
    * 组件的属性列表
    */
@@ -10,7 +11,7 @@ Component({
     },
     // 详细信息
     spuList: {
-      type:Array
+      type: Array
     }
   },
 

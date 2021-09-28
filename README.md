@@ -9,6 +9,24 @@ npm install
 ## 构建npm
 使用微信小程序工具构建npm。
 
+
+
+### 主题和banner
+
+**在本项目中，主题一般都是有封面图的。**banner一般是没有大的封面图的。而是轮播图那种。当然我这里说的也不全。
+
+### 热卖榜单模块
+
+关于项目的 **热卖榜单模块，到底是设置为主题还是banner？**
+
+其实最后两个设置都不是。而是 **主题和banner的集合体。**
+
+这个模块既有类似于 **每周上新主题**的查看更多按钮，也有banner封面图。将每个主题的大图放在一起，抽象为 **一个banner的图。**
+
+
+
+
+
 ## 优惠券
 优惠券的设计是比较复杂的。
 当然复杂的还是主要在服务端。
@@ -81,9 +99,184 @@ sku ，单品
 
 
 
+## 点击态hover
+
+ 就是一个简单的动画效果。因为用户的设备不同，所以点击了按钮等，可能设备反应的时间是不同的。所以我们可以通过点击态效果，给用户好的提示，告诉用户的操作是生效了的。
+
+小程序提供的有给我们的点击态外部样式。只要我们定义好需要的动画效果即可。
+
+```html
+<!-- 使用微信小程序提供的点击态 -->
+        <view hover-class="react-hover" hover-stay-time="2000">
+            <image class="left" src="{{left.img}}"/>
+        </view>
+```
 
 
 
+### 引入公共样式
+
+这是小程序独有的引入外部样式的语法。是在wxss文件中引入其他的wxss文件。
+
+
+
+```css
+/*引入公共样式使用@import*/
+@import "../../wxss/sleeve.wxss";
+```
+
+```css
+/* sleeve.wxss */
+
+/*公共样式*/
+/*点击态动画*/
+.react-hover {
+    position: relative;
+    top: 3rpx;
+    left: 3rpx;
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.1) inset;
+}
+```
+
+
+
+
+
+## 小程序的知识
+
+### 标签
+
+#### scroll-view标签
+
+##### 开启弹性布局
+
+这个标签想要支持弹性布局，需要设置属性：**enable-flex**的属性值为true。
+
+
+
+##### 水平方法滚动
+
+需要设置属性 scroll-x的属性值为true。垂直方式和这个一样，设置的是scroll-y属性。
+
+
+
+##### 解决scroll-view的高度自适应问题
+
+我们发现，如果不给scroll-view标签，不设置高度，想让内容直接撑开这个标签的高度（内容水平排放的情况），该高度还是原来垂直排放时的高度。解决该问题：**需要在scroll-view标签的内部，再次包裹一个view标签，让view标签进行弹性布局。**
+
+```html
+<!-- 开启弹性布局 enable-flex -->
+    <scroll-view scroll-x class="scroll-view">
+        <view class="inner-view">
+            <block wx:for="{{spuList}}" wx:key="id">
+                <view class="spu-container">
+                    <!-- 图片，价格，文本 -->
+                    <image class="spu-img" src="{{item.img}}"></image>
+                    <l-price l-unit-class="price-unit"
+                             l-value-class="price-value"
+                             color="#157658"
+                             value="{{item.price}}"/>
+                    <text>{{item.title}}</text>
+                </view>
+            </block>
+        </view>
+    </scroll-view>
+```
+
+![image-20210926201237592](https://gitee.com/mao0826/picture/raw/master/images/web/wei_chat/image-20210926201237592.png)
+
+
+
+完美解决这个问题。
+
+
+
+
+
+
+
+### wxs
+
+#### 使用wxs制作一个超出字符串长度隐藏显示省略号的方法
+
+
+
+
+
+
+
+### 组件属性监听器observers
+
+使用组件时，当我们想要监听某个属性的值的变化的时候，比如**有些时候，在一些数据字段被 setData 设置时，需要执行一些操作。**可以使用这个监听器。
+
+数据监听器可以用于监听和响应任何属性和数据字段的变化
+
+例如， `this.data.sum` 永远是 `this.data.numberA` 与 `this.data.numberB` 的和。此时，可以使用数据监听器进行如下实现。
+
+```js
+Component({
+  attached: function() {
+    this.setData({
+      numberA: 1,
+      numberB: 2,
+    })
+  },
+  observers: {
+    'numberA, numberB': function(numberA, numberB) {
+      // 在 numberA 或者 numberB 被设置时，执行这个函数
+      this.setData({
+        sum: numberA + numberB
+      })
+    }
+  }
+})
+```
+
+也可以这样写，直接监听一个属性的时候，可以简写。多个属性同时监听生效一个回调操作的时候，是采用上面的写法。
+
+```js
+observers: {
+    banner(banner) {
+      if (!banner) return;
+      if (!banner.items?.length) return;
+      // 左侧的主题图
+      const left = banner.items.find(val => val.name === "left");
+      const rightTop = banner.items.find(val => val.name === "right-top");
+      const rightBottom = banner.items.find(val => val.name === "right-bottom");
+      this.setData({
+        left, rightTop, rightBottom
+      })
+    }
+  },
+```
+
+当然，有需要的也可以监听对象，以及对象的属性，甚至可以使用通配符监听所有的属性等。
+
+
+
+#### 注意事项
+
+- 数据监听器监听的是 setData 涉及到的数据字段，即使这些数据字段的值没有发生变化，数据监听器依然会被触发。
+- 如果在数据监听器函数中使用 setData 设置本身监听的数据字段，可能会导致死循环，需要特别留意。
+- 数据监听器和属性的 observer 相比，数据监听器更强大且通常具有更好的性能。
+
+
+
+### 抽象节点
+
+[抽象节点](https://developers.weixin.qq.com/miniprogram/dev/framework/custom-component/generics.html)
+
+有时，自定义组件模板中的一些节点，其对应的自定义组件不是由自定义组件本身确定的，而是自定义组件的调用者确定的。这时可以把这个节点声明为“抽象节点”。
+
+所以我们在最后一个无限瀑布流模块，也就是为你推荐模块的地方，需要抽象出节点。**每个商品就是一个抽象节点。**
+
+
+
+#### 防抖截流与分页
+
+防止用户发起不必要的请求，重复的请求，无意义的请求。
+
+比如按钮的禁用，倒计时，模态框，loading等等
 
 
 

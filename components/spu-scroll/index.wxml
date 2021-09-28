@@ -1,20 +1,24 @@
 <!--components/spu-scroll/index.wxml-->
 
-<view class="container">
+        <!--导入wxs，处理字符串，进行截取显示-->
+<wxs src="../../miniprogram_npm/lin-ui/filter/string.wxs" module="str"></wxs>
+<view class="container m-class">
     <!--标题大图-->
     <image src="{{theme.title_img}}" class="title"></image>
-    <scroll-view>
-        <block wx:for="{{spuList}}" wx:key="id">
-            <view>
-                <!-- 图片，价格，文本 -->
-                <image src="{{item.img}}"></image>
-                <l-price l-unit-class="price-unit"
-                         autofix
-                         l-value-class="price-value"
-                         color="#157658"
-                         value="{{item.price}}"/>
-                <text>{{item.title}}</text>
-            </view>
-        </block>
+    <!-- 开启弹性布局 enable-flex -->
+    <scroll-view scroll-x class="scroll-view">
+        <view class="inner-view">
+            <block wx:for="{{spuList}}" wx:key="id">
+                <view class="spu-container">
+                    <!-- 图片，价格，文本 -->
+                    <image class="spu-img" src="{{item.img}}"></image>
+                    <text class="spu-text">{{item.title.length >= 8 ? str.substring(item.title, 0, 7) + "..." : item.title}}</text>
+                    <l-price l-unit-class="price-unit"
+                             l-value-class="price-value"
+                             color="#157658"
+                             value="{{item.price}}"/>
+                </view>
+            </block>
+        </view>
     </scroll-view>
 </view>

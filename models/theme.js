@@ -39,7 +39,22 @@ class Theme {
    */
   async getHomeLocationE() {
     return this._themes.find(item => item.name === Theme._locationE);
+  }
 
+  /**
+   * 获取主题F
+   * @return {Promise<Object>}
+   */
+  async getHomeLocationF() {
+    return this._themes.find(item => item.name === Theme._locationF);
+  }
+
+  /**
+   * 获取主题H 时尚主题 时尚出街
+   * @return {Promise<object>}
+   */
+  async getHomeLocationH() {
+    return this._themes.find(item => item.name === Theme._locationH);
   }
 
   /**

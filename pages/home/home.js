@@ -4,6 +4,7 @@ import {Theme} from "../../models/theme.js"
 import {Banner} from "../../models/banner";
 import {Category} from "../../models/category";
 import {Activity} from "../../models/activity";
+import {SpuPaging} from "../../models/spu-paging";
 
 Page({
 
@@ -15,13 +16,19 @@ Page({
     themeA: null,
     // 主题E 每周上新
     themeE: null,
-    themeESpuList:[],
+    themeESpuList: [],
     //  广告
     bannerB: null,
     // 宫格数据
     grids: [],
     // 优惠券
-    activityD: null
+    activityD: null,
+    // 主题F 精选主题
+    themeF: null,
+    // 热卖榜单
+    bannerG: null,
+    //
+    themeH: null,
   },
 
   /**
@@ -71,6 +78,7 @@ Page({
         themeESpuList = data.spu_list.slice(0, 8);
       }
     }
+    const themeF = await theme.getHomeLocationF();
 
     // 获取横幅广告，轮播图
     const bannerB = await Banner.getHomeLocationB();
@@ -78,7 +86,10 @@ Page({
     const grids = await Category.getHomeLocationC();
     // 获取优惠券数据
     const activityD = await Activity.getHomeLocationD();
-    console.log(grids);
+    // 热卖榜单
+    const bannerG = await Banner.getHomeLocationG();
+    // 主题H
+    const themeH = await theme.getHomeLocationH();
     this.setData({
       // themeA: themeA[0],
       themeA,
@@ -86,7 +97,21 @@ Page({
       grids,
       activityD,
       themeE,
-      themeESpuList
+      themeESpuList,
+      themeF,
+      bannerG,
+      themeH
     });
-  }
+    await this.initBottomSpuList();
+  },
+  /**
+   * 获取无限瀑布流的数据，一直刷新一直加载
+   * @return {Promise<void>}
+   */
+  async initBottomSpuList(){
+    const paging = await SpuPaging.getLatestPaging();
+    const data = await paging.getMoreData();
+    console.log(data);
+    if(!data) return;
+  },
 })

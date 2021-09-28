@@ -19,8 +19,19 @@
 
     <!-- 主题E -->
     <m-spu-scroll wx:if="{{themeE.online}}"
+                  m-class="spu-scroll"
                   theme="{{themeE}}"
                   spu-list="{{themeESpuList}}"/>
 
+    <!--主题F-->
+    <image src="{{themeF.entrance_img}}" class="quality"></image>
+    <!-- 热卖榜单 -->
+    <m-hot-list banner="{{bannerG}}"/>
+    <image src="{{themeH.entrance_img}}" class="fashion"></image>
 
+    <!-- 最后一个主题：无限瀑布流 -->
+    <view class="spu-bottom">
+        <image class="title-spu-bottom" src="../../imgs/home/title@interest.png"></image>
+        <l-water-flow generic:l-water-flow-item=""></l-water-flow>
+    </view>
 </view>
