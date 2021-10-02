@@ -1,0 +1,15 @@
+<!--components/realm/index.wxml-->
+<view class="container">
+    <view>
+        <image src="{{}}"></image>
+    </view>
+    <!--sku多个规格参数-->
+    <block wx:for="{{}}" wx:key="">
+        <m-fence/>
+    </block>
+    <!-- 数量选择器-->
+    <view class="counter-container">
+        <!--        <l-counter/>-->
+    </view>
+    <!--    加入购物车 购买 -->
+</view>

@@ -1,5 +1,5 @@
 <!--components/spu-scroll/index.wxml-->
-
+<wxs src="../../wxs/price.wxs" module="p"/>
         <!--导入wxs，处理字符串，进行截取显示-->
 <wxs src="../../miniprogram_npm/lin-ui/filter/string.wxs" module="str"></wxs>
 <view class="container m-class">
@@ -16,7 +16,7 @@
                     <l-price l-unit-class="price-unit"
                              l-value-class="price-value"
                              color="#157658"
-                             value="{{item.price}}"/>
+                             value="{{p.mainPrice(item.price,item.discount_price)}}"/>
                 </view>
             </block>
         </view>

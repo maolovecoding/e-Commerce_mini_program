@@ -1,0 +1,31 @@
+// components/realm/index.js
+import {FenceGroup} from "../models/fence-group";
+
+Component({
+  /**
+   * 组件的属性列表
+   */
+  properties: {
+    spu: Object
+  },
+  /**
+   * 监听器，这里来处理spu商品的数据。提取规格值
+   */
+  observers: {
+    spu(spu){
+      if(!spu) return;
+      const fenceGroup = new FenceGroup(spu);
+      fenceGroup.initFences();
+    }
+  },
+
+  /**
+   * 组件的初始数据
+   */
+  data: {},
+
+  /**
+   * 组件的方法列表
+   */
+  methods: {}
+})

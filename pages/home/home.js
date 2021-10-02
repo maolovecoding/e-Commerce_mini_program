@@ -27,8 +27,11 @@ Page({
     themeF: null,
     // 热卖榜单
     bannerG: null,
-    //
+    // 主题H
     themeH: null,
+    // 获取spu瀑布流商品数据的对象
+    spuPaging: null,
+    loadingType: "loading"
   },
 
   /**
@@ -37,22 +40,24 @@ Page({
   async onLoad(options) {
     // 初始化所有数据
     await this.initAllData();
+    await this.initBottomSpuList();
   },
-
   /**
-   * 生命周期函数--监听页面初次渲染完成
+   * 监听用户页面上滑的事件处理函数
    */
-  onReady: function () {
-
+  async onReachBottom() {
+    const data = await this.data.spuPaging.getMoreData();
+    console.log(data);
+    if (!data) return;
+    // 加载更多数据
+    wx.lin.renderWaterFlow(data.items);
+    // 切换加载提示为没有更多数据
+    if (!data.moreData) {
+      this.setData({
+        loadingType: "end"
+      })
+    }
   },
-
-  /**
-   * 生命周期函数--监听页面显示
-   */
-  onShow: function () {
-
-  },
-
 
   /**
    * 初始化所有数据
@@ -102,16 +107,18 @@ Page({
       bannerG,
       themeH
     });
-    await this.initBottomSpuList();
   },
   /**
    * 获取无限瀑布流的数据，一直刷新一直加载
    * @return {Promise<void>}
    */
-  async initBottomSpuList(){
-    const paging = await SpuPaging.getLatestPaging();
+  async initBottomSpuList() {
+    const paging = SpuPaging.getLatestPaging();
+    this.data.spuPaging = paging;
     const data = await paging.getMoreData();
-    console.log(data);
-    if(!data) return;
+    if (!data) return;
+    // 将数据传到瀑布流里面 将数组传进去
+    // 瀑布流内部会自动帮我们累加数据
+    wx.lin.renderWaterFlow(data.items);
   },
 })
