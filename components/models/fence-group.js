@@ -17,6 +17,11 @@ class FenceGroup {
    * sku列表
    */
   skuList = [];
+  /**
+   * 商品数组
+   * @type {[]}
+   */
+  fences = [];
 
   /**
    *
@@ -25,6 +30,7 @@ class FenceGroup {
   constructor(spu) {
     this.spu = spu;
     this.skuList = spu?.sku_list;
+    // console.log(this.skuList)
   }
 
   /**
@@ -45,7 +51,7 @@ class FenceGroup {
       // 取到具体的规格（比如尺码）值
       fences[currentColumn].pushValueTitle(element.value);
     });
-    console.log(fences);
+    // console.log(fences);
   }
 
   /**
@@ -57,12 +63,40 @@ class FenceGroup {
     const fences = [];
     // 转置后的矩阵
     const AT = matrix.transpose();
+    /*
+
+    [
+        [{1}, {2}, {3}],
+        [{4}, {5}, {6}],
+        [{7}, {8}, {9}],
+        [{10}, {11}, {12}],
+     ]
+     [
+        [{1}, {4}, {7}, {10}]
+        [{2}, {5}, {8}, {11}]
+        [{3}, {6}, {9}, {12}]
+     ]
+    * */
     AT.forEach(row => {
+      // [{1}, {4}, {7}, {10}]
       const fence = new Fence(row);
       fence.init();
       fences.push(fence);
     });
-    console.log(fences);
+    // console.log(fences);
+    this.fences = fences;
+  }
+
+  /**
+   * 遍历cells
+   * @param callback {Function} 回调函数
+   */
+  eachCell(callback) {
+    for (let i = 0; i < this.fences.length; i++) {
+      for (let j = 0; j < this.fences[i].cells.length; j++) {
+        callback(this.fences[i].cells[j], i, j);
+      }
+    }
   }
 
 

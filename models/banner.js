@@ -1,6 +1,6 @@
 /**
  * @FileName: banner.js
- * @Description: TODO
+ * @Description: 广告类数据的请求
  * @author 毛毛
  * @date 2021-09-20 11:13
  */
@@ -20,9 +20,9 @@ class Banner {
    * 获取横幅轮播图 广告
    * @return {Promise<*>}
    */
-  static async getHomeLocationB(){
+  static async getHomeLocationB() {
     return await Http.request({
-      url:`banner/name/${Banner._locationB}`,
+      url: `banner/name/${Banner._locationB}`,
     });
   }
 
@@ -30,9 +30,9 @@ class Banner {
    * 获取热卖榜单的数据 G
    * @return {Promise<*>}
    */
-  static async getHomeLocationG(){
+  static async getHomeLocationG() {
     return await Http.request({
-      url:`banner/name/${Banner._locationG}`,
+      url: `banner/name/${Banner._locationG}`,
     });
   }
 }

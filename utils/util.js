@@ -17,6 +17,39 @@ const promisic = fn => {
   };
 };
 
+/**
+ * 实现 组合
+ * @param arr 待选数组
+ * @param size 从数组里面要抽几个元素进行组合
+ */
+function combination(arr, size) { // ["1-45","3-9","4-14"] 1
+  const r = [];
+
+  /**
+   *
+   * @param target 生成的组合
+   * @param sourceArr 源数组
+   * @param n 求的组合中剩余的抽取的数量
+   * @private
+   */
+  function _(target, sourceArr, n) { // [] ["1-45","3-9","4-14"] 1
+    if (n === 0) {
+      r[r.length] = target; // [["1-45"]]
+      return;
+    }
+    // l = 2
+    for (let i = 0, l = sourceArr.length - n; i <= l; i++) {
+      let b = target.slice(); // []
+      b.push(sourceArr[i]);// ["1-45"]
+      _(b, sourceArr.slice(i + 1), n - 1); // ["1-45"] ["3-9","4-14"] 0
+    }
+  }
+
+  _([], arr, size); // [] ["1-45","3-9","4-14"] 1
+  return r;
+}
+
 export {
-  promisic
+  promisic,
+  combination
 }

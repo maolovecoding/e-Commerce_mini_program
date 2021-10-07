@@ -1,7 +1,14 @@
 <!--components/fence/index.wxml-->
 <view class="container">
     <!--规格名-->
-    <view class="title"></view>
-    <!--规格值-->
-    <view></view>
+    <view class="title">{{fence.title}}</view>
+    <!--一组规格值-->
+    <view class="row-container">
+        <block wx:for="{{fence.cells}}" wx:key="id">
+            <!-- 每个单独的 规格值对象 -->
+            <!-- TODO 确定了列号 -->
+            <m-cell x="{{x}}" y="{{index}}" class="cell" cell="{{item}}"/>
+        </block>
+        <view class="hr"></view>
+    </view>
 </view>
