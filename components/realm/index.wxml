@@ -1,8 +1,48 @@
 <!--components/realm/index.wxml-->
+<wxs src="../../wxs/price.wxs" module="p"/>
 <view class="container">
-    <view>
-        <image src="{{}}"></image>
+    <view class="sku-preview">
+        <image src="{{previewImg}}" class="sku-img"></image>
+        <view class="sku-description">
+            <text class="title">{{title}}</text>
+            <view>
+                <view class="price-row">
+                    <!-- 价格 -->
+                    <l-price
+                            value="{{p.mainPrice(price,discountPrice)}}"
+                            color="#157658"
+                            value-size="28"
+                            autofix
+                    />
+                    <l-price
+                            wx:if="{{p.slashedPrice(price,discountPrice)}}"
+                            deleted
+                            color="#999"
+                            value-size="26"
+                            l-class="discount-price"
+                            value="{{p.slashedPrice(price,discountPrice)}}"
+                    />
+                    <!-- 库存 -->
+                    <view class="stock" wx:if="{{stock >= 10}}">库存：{{stock}}件</view>
+                    <view class="stock-pinch" wx:if="{{stock < 10}}">仅剩：{{stock}}件</view>
+                </view>
+                <!-- 无规格的情况，不需要显示  -->
+                <view class="sku-pending" wx:if="{{noSpec}}">
+                    <!--   没有选择的规格    -->
+                    <text class="" wx:if="{{!isSkuIntact}}">请选择：</text>
+                    <!--  规格全选后 显示已选的规格值 -->
+                    <text class="">已选：</text>
+                    <!--   待选择的规格名   -->
+                    <text class="" wx:if="{{!isSkuIntact}}">1</text>
+                    <!--  已选的规格值 -->
+                    <text class="" wx:else>2</text>
+                </view>
+            </view>
+        </view>
     </view>
+
+    <view class="hr"/>
+
     <!--sku多个规格参数-->
     <block wx:for="{{fences}}" wx:key="index">
         <m-fence x="{{index}}" bind:celltap="onCellTap" fence="{{item}}"/>

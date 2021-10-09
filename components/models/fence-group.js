@@ -1,12 +1,13 @@
 /**
  * @FileName: fence-group.js
- * @Description: 管理一组fence的业务逻辑  提取每个规格的规格值
+ * @Description: 管理一组fence的业务逻辑  提取每个规格的规格值  本职类
  * @author 毛毛
  * @date 2021-10-01 17:21
  */
 
 import {Matrix} from "./matrix";
 import {Fence} from "./fence";
+import {CellStatus} from "../../core/enum";
 
 class FenceGroup {
   /**
@@ -85,6 +86,39 @@ class FenceGroup {
     });
     // console.log(fences);
     this.fences = fences;
+  }
+
+  /**
+   * 获取默认的sku规格
+   * @return {*}
+   */
+  getDefaultSku() {
+    const defaultSkuId = this.spu.default_sku_id;
+    if (!defaultSkuId) return;
+    return this.skuList.find(s => s.id === defaultSkuId);
+  }
+
+  /**
+   * 根据cell的id，改变这个cell的状态
+   * @param cellId {number}
+   * @param status {CellStatus}
+   */
+  setCellStatusById(cellId, status) {
+    this.eachCell((cell) => {
+      if (cell.id === cellId) {
+        cell.status = status;
+      }
+    });
+  }
+
+  /**
+   * 更改cell的状态 选中是非选中
+   * @param x {number}
+   * @param y {number}
+   * @param status {CellStatus}
+   */
+  setCellStatusByXY(x, y, status) {
+    this.fences[x].cells[y].status = status;
   }
 
   /**

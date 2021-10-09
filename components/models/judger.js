@@ -1,6 +1,6 @@
 /**
  * @FileName: judger.js
- * @Description: 用来做出一些判断的类
+ * @Description: 用来做出一些判断的类  TODO 沟通类
  * judger 法官 仲裁者
  * @author 毛毛
  * @date 2021-10-05 15:12
@@ -27,12 +27,30 @@ class Judger {
 
   constructor(fenceGroup) {
     this.fenceGroup = fenceGroup;
-    this._initSkuPending();
+    // TODO 这里需要先初始化所有可能的规则路径 然后在初始化已选的skuPending
     this._initPathDict();
+    this._initSkuPending();
   }
 
   _initSkuPending() {
-    this.skuPending = new SkuPending();
+    this.skuPending = new SkuPending(this.fenceGroup.fences.length);
+    // 默认sku
+    const defaultSku = this.fenceGroup.getDefaultSku();
+    if (!defaultSku) return;
+    this.skuPending.initDefaultSku(defaultSku);
+    // 初始化已选中的cell状态（默认规格的选择）
+    this._initDefaultSkuSelectedCellStatus();
+    this.judge({isInit: true});
+  }
+
+  /**
+   * 初始化默认规格的选中状态
+   * @private
+   */
+  _initDefaultSkuSelectedCellStatus() {
+    this.skuPending.pending.forEach(cell => {
+      this.fenceGroup.setCellStatusById(cell.id, CellStatus.SELECTED);
+    });
   }
 
   /**
@@ -43,11 +61,25 @@ class Judger {
       // 合并所有sku可能的路径
       this.pathDict.push(...new SkuCode(s.code).totalSeqments);
     });
-    // console.log(this.pathDict);
   }
 
-  judge({cell, x, y}) {
-    this._changeCurrentCellStatus(cell, x, y);
+  /**
+   * 是否选择了完整的sku规格
+   * @return {boolean}
+   */
+  isSkuIntact() {
+    return this.skuPending.isIntact();
+  }
+
+  /**
+   *
+   * @param cell
+   * @param x
+   * @param y
+   * @param isInit {boolean} 是否是初始化（初始化就是内部调用）
+   */
+  judge({cell, x, y, isInit = false}) {
+    !isInit && this._changeCurrentCellStatus(cell, x, y);
     // TODO 方式一 改变this指向
     this.fenceGroup.eachCell(this._changeOtherCellStatus.bind(this));
     // TODO 方式二： 使用箭头函数
@@ -79,14 +111,14 @@ class Judger {
     // 可选 变 选中
     if (cell.status === CellStatus.WAITING) {
       // cell.status = CellStatus.SELECTED;
-      this.fenceGroup.fences[x].cells[y].status = CellStatus.SELECTED;
+      this.fenceGroup.setCellStatusByXY(x, y, CellStatus.SELECTED);
       // 插入已选规格值
       this.skuPending.insertCell(cell, x);
     }
     // 选中 变 可选
     if (cell.status === CellStatus.SELECTED) {
       //  cell.status = CellStatus.WAITING;
-      this.fenceGroup.fences[x].cells[y].status = CellStatus.WAITING;
+      this.fenceGroup.setCellStatusByXY(x, y, CellStatus.WAITING);
       this.skuPending.removeCell(x);
     }
 
@@ -108,10 +140,10 @@ class Judger {
     // 潜在路径存在
     isIn ?
         // 按钮可选状态
-        this.fenceGroup.fences[x].cells[y].status = CellStatus.WAITING
+        this.fenceGroup.setCellStatusByXY(x, y, CellStatus.WAITING)
         :
         // 按钮禁用状态
-        this.fenceGroup.fences[x].cells[y].status = CellStatus.FORBIDDEN;
+        this.fenceGroup.setCellStatusByXY(x, y, CellStatus.FORBIDDEN);
   }
 
   /**

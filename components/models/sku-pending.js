@@ -4,14 +4,33 @@
  * @author 毛毛
  * @date 2021-10-06 21:25
  */
+import {Cell} from "./cell";
+
 export class SkuPending {
   /**
    * 记录已选的cell 也就是已经选中的规格值
    * @type {[]}
    */
   pending = [];
+  /**
+   * 完整的sku应该有多少种规格
+   */
+  size;
 
-  constructor() {
+  constructor(size) {
+    this.size = size;
+  }
+
+  /**
+   * 初始化插入默认的sku，在外界调用
+   * @param sku
+   */
+  initDefaultSku(sku) {
+    // this.size = sku.specs.length;
+    for (let i = 0; i < sku.specs.length; i++) {
+      const cell = new Cell(sku.specs[i]);
+      this.insertCell(cell, i);
+    }
   }
 
   /**
@@ -48,5 +67,29 @@ export class SkuPending {
       return false;
     }
     return cell.id === pendingCell.id;
+  }
+
+  /**
+   * 确定用户是否选择了完整的sku
+   * @return {boolean}
+   */
+  isIntact() {
+    // [undefined,] pending 已选规格我们不是push进去的，所以可能出现undefined的情况
+    for (let i = 0; i < this.size; i++) {
+      if(this._isEmptyPart(i)) return false;
+    }
+    // 不需要判断长度了，上面的循环其实已经判断长度是否相等了
+    // return this.size === this.pending.length;
+    return true;
+  }
+
+  /**
+   * 元素是否为空
+   * @param index
+   * @return {boolean}
+   * @private
+   */
+  _isEmptyPart(index) {
+    return !this.pending[index];
   }
 }
