@@ -27,15 +27,15 @@
                     <view class="stock-pinch" wx:if="{{stock < 10}}">仅剩：{{stock}}件</view>
                 </view>
                 <!-- 无规格的情况，不需要显示  -->
-                <view class="sku-pending" wx:if="{{noSpec}}">
+                <view class="sku-pending" wx:if="{{!noSpec}}">
                     <!--   没有选择的规格    -->
                     <text class="" wx:if="{{!isSkuIntact}}">请选择：</text>
                     <!--  规格全选后 显示已选的规格值 -->
-                    <text class="">已选：</text>
+                    <text class="" wx:else>已选：</text>
                     <!--   待选择的规格名   -->
-                    <text class="" wx:if="{{!isSkuIntact}}">1</text>
+                    <text class="" wx:if="{{!isSkuIntact}}">{{missingKeys}}</text>
                     <!--  已选的规格值 -->
-                    <text class="" wx:else>2</text>
+                    <text class="" wx:else>{{currentValues}}</text>
                 </view>
             </view>
         </view>

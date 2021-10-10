@@ -20,7 +20,7 @@ class FenceGroup {
   skuList = [];
   /**
    * 商品数组
-   * @type {[]}
+   * @type {Fence[]}
    */
   fences = [];
 
@@ -96,6 +96,22 @@ class FenceGroup {
     const defaultSkuId = this.spu.default_sku_id;
     if (!defaultSkuId) return;
     return this.skuList.find(s => s.id === defaultSkuId);
+  }
+
+  getSku(skuCode) {
+    // spu.id + "$" + sku.id
+    const fullSkuCode = `${this.spu.id}$${skuCode}`;
+    const sku = this.skuList.find(s => s.code === fullSkuCode);
+    return sku ?? "";
+  }
+
+  /**
+   * 根据索引找sku规格的规格名称
+   * @param index
+   * @return {*}
+   */
+  getFenceTitleByIndex(index){
+    return this.fences[index].title;
   }
 
   /**

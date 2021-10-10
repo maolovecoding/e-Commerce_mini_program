@@ -48,6 +48,5 @@ export class SkuCode {
       const newSeqments = seqments.map(segs => segs.join("#"));
       this.totalSeqments.push(...newSeqments);
     }
-    console.log(this.totalSeqments);
   }
 }

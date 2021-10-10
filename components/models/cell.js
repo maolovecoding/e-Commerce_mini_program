@@ -37,7 +37,7 @@ class Cell {
    * @return {string}
    */
   getCellCode() {
-    return this._spec.key_id + "-" + this._spec.value_id;
+    return this.spec.key_id + "-" + this.spec.value_id;
   }
 }
 

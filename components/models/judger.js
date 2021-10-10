@@ -72,6 +72,32 @@ class Judger {
   }
 
   /**
+   * 获取确定的sku 需要是完整的sku
+   */
+  getDeterminateSku() {
+    const code = this.skuPending.getSkuCode();
+    // sku
+    return this.fenceGroup.getSku(code);
+  }
+
+  /**
+   * 获取缺失的sku的规格名称
+   * @return {*[]}
+   */
+  getMissingSpecKeys() {
+    const missingKeysIndex = this.skuPending.getMissingSpecKeysIndex();
+    return missingKeysIndex.map(index => this.fenceGroup.getFenceTitleByIndex(index));
+  }
+
+  /**
+   * 获取已选的规格值
+   * @return {string[]|*}
+   */
+  getCurrentSpecValues() {
+    return this.skuPending.getCurrentSpecValues();
+  }
+
+  /**
    *
    * @param cell
    * @param x
@@ -133,7 +159,7 @@ class Judger {
    */
   _changeOtherCellStatus(cell, x, y) {
     const potentialPath = this._findPotentialPath(cell, x, y);
-    console.log(potentialPath);
+    // console.log(potentialPath);
     // 潜在路径为空 不做任何处理 因为这时候说明这个路径是我们当前选中的路径
     if (!potentialPath) return;
     const isIn = this._isInDict(potentialPath);

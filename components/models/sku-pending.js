@@ -5,6 +5,7 @@
  * @date 2021-10-06 21:25
  */
 import {Cell} from "./cell";
+import {Joiner} from "../../utils/joiner";
 
 export class SkuPending {
   /**
@@ -70,13 +71,50 @@ export class SkuPending {
   }
 
   /**
+   * 生成的新的sku的唯一code码
+   */
+  getSkuCode() {
+    const joiner = new Joiner("#");
+    this.pending.forEach(cell => {
+      const cellCode = cell.getCellCode();
+      joiner.join(cellCode);
+    });
+    return joiner.getStr();
+  }
+
+  /**
+   * 获取已选的规格值
+   * @return {string[]}
+   */
+  getCurrentSpecValues() {
+    return this.pending.map(cell => {
+      // cell.spec.value
+      return cell?.title;
+    });
+  }
+
+  /**
+   * 获取未选的规格名的序号 在pending里面的序号
+   * @return {number[]}
+   */
+  getMissingSpecKeysIndex() {
+    const keysIndex = [];
+    for (let i = 0; i < this.size; i++) {
+      if(!this.pending[i]){
+        keysIndex.push(i);
+      }
+    }
+    return keysIndex;
+  }
+
+  /**
    * 确定用户是否选择了完整的sku
    * @return {boolean}
    */
   isIntact() {
     // [undefined,] pending 已选规格我们不是push进去的，所以可能出现undefined的情况
     for (let i = 0; i < this.size; i++) {
-      if(this._isEmptyPart(i)) return false;
+      if (this._isEmptyPart(i)) return false;
     }
     // 不需要判断长度了，上面的循环其实已经判断长度是否相等了
     // return this.size === this.pending.length;
