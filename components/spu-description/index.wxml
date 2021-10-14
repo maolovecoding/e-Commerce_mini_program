@@ -1,0 +1,62 @@
+<!--components/spu-description/index.wxml-->
+<wxs src="../../wxs/price.wxs" module="p"/>
+<view class="container">
+    <view class="left">
+        <!--  标题 -->
+        <text class="title">{{spu.title}}</text>
+        <!--  标签  -->
+        <view class="tags">
+            <block wx:for="{{tags}}" wx:key="id">
+                <l-tag
+                        type="reading"
+                        bg-color="#DCEBE6"
+                        font-color="#157658"
+                        size="super-mini"
+                        l-class="l-tag"
+                >
+                    {{item}}
+                </l-tag>
+            </block>
+        </view>
+        <!-- 副标题 -->
+        <text class="subtitle">{{spu.subtitle}}</text>
+        <!-- 价格 -->
+        <view class="price-row">
+            <l-price wx:if="{{p.mainPrice(spu.price,spu.discount_price)}}"
+                     value="{{p.mainPrice(spu.price,spu.discount_price)}}"
+                     color="#157658"
+                     unit-size="24"
+                     autofix
+                     count-size="30"
+                     l-unit-class="l-price-unit"
+            />
+            <l-price wx:if="{{p.slashedPrice(spu.price,spu.discount_price)}}"
+                     value="{{p.slashedPrice(spu.price,spu.discount_price)}}"
+                     color="#999"
+                     size="26"
+                     bold="400"
+                     deleted
+                     l-class="discount-price"
+            />
+            <!--  折扣  -->
+            <l-tag wx:if="{{spu.discount_price}}"
+                   size="super-mini"
+                   l-class="discount-tag" type="reading"
+                   bg-color="#c92756">
+                折扣
+            </l-tag>
+        </view>
+    </view>
+    <!-- 分享 -->
+    <view class="right">
+        <!--  <button open-type="share">分享</button>-->
+        <l-button special open-type="share">
+            <!--  自定义按钮样式 -->
+            <view class="inner">
+                <l-icon color="#157658" name="share" size="24"/>
+                <text>分</text>
+                <text>享</text>
+            </view>
+        </l-button>
+    </view>
+</view>

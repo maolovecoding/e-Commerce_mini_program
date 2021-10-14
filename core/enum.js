@@ -9,5 +9,13 @@ const CellStatus = {
   SELECTED: "selected",
   WAITING: "waiting",
 }
+/**
+ * 立即购买，加入购物车
+ * @type {{BUY: string, CART: string}}
+ */
+const ShoppingWay = {
+  CART: "cart",
+  BUY: "buy"
+}
 
-export {CellStatus};
+export {CellStatus, ShoppingWay};

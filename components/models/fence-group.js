@@ -82,9 +82,14 @@ class FenceGroup {
       // [{1}, {4}, {7}, {10}]
       const fence = new Fence(row);
       fence.init();
+      // 是否有可视规格
+      if (this._hasSketchFence() && this._isSketchFence(fence.id)) {
+        // 记录可视规格的img到cell里面
+        fence.setFenceSketch(this.skuList);
+      }
       fences.push(fence);
     });
-    // console.log(fences);
+    console.log(fences);
     this.fences = fences;
   }
 
@@ -110,7 +115,7 @@ class FenceGroup {
    * @param index
    * @return {*}
    */
-  getFenceTitleByIndex(index){
+  getFenceTitleByIndex(index) {
     return this.fences[index].title;
   }
 
@@ -147,6 +152,26 @@ class FenceGroup {
         callback(this.fences[i].cells[j], i, j);
       }
     }
+  }
+
+  /**
+   * 确定可视规格 确定是可视规格的那个规格是那个
+   * @param fenceId 规格名的唯一标识
+   * @private
+   * @return {boolean}
+   */
+  _isSketchFence(fenceId) {
+    return this.spu.sketch_spec_id === fenceId;
+  }
+
+  /**
+   * 是否有可视规格  根据服务器返回的数据确定
+   * @private
+   * @return {boolean}
+   */
+  _hasSketchFence() {
+    // return this.spu.sketch_spec_id ? true :false;
+    return !!this.spu.sketch_spec_id;
   }
 
 

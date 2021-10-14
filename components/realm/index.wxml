@@ -1,55 +1,65 @@
 <!--components/realm/index.wxml-->
 <wxs src="../../wxs/price.wxs" module="p"/>
-<view class="container">
-    <view class="sku-preview">
-        <image src="{{previewImg}}" class="sku-img"></image>
-        <view class="sku-description">
-            <text class="title">{{title}}</text>
-            <view>
-                <view class="price-row">
-                    <!-- 价格 -->
-                    <l-price
-                            value="{{p.mainPrice(price,discountPrice)}}"
-                            color="#157658"
-                            value-size="28"
-                            autofix
-                    />
-                    <l-price
-                            wx:if="{{p.slashedPrice(price,discountPrice)}}"
-                            deleted
-                            color="#999"
-                            value-size="26"
-                            l-class="discount-price"
-                            value="{{p.slashedPrice(price,discountPrice)}}"
-                    />
-                    <!-- 库存 -->
-                    <view class="stock" wx:if="{{stock >= 10}}">库存：{{stock}}件</view>
-                    <view class="stock-pinch" wx:if="{{stock < 10}}">仅剩：{{stock}}件</view>
-                </view>
-                <!-- 无规格的情况，不需要显示  -->
-                <view class="sku-pending" wx:if="{{!noSpec}}">
-                    <!--   没有选择的规格    -->
-                    <text class="" wx:if="{{!isSkuIntact}}">请选择：</text>
-                    <!--  规格全选后 显示已选的规格值 -->
-                    <text class="" wx:else>已选：</text>
-                    <!--   待选择的规格名   -->
-                    <text class="" wx:if="{{!isSkuIntact}}">{{missingKeys}}</text>
-                    <!--  已选的规格值 -->
-                    <text class="" wx:else>{{currentValues}}</text>
+<scroll-view class="container" scroll-y>
+    <view class="inner-container">
+        <view class="sku-preview">
+            <image src="{{previewImg}}" class="sku-img"></image>
+            <view class="sku-description">
+                <text class="title">{{title}}</text>
+                <view>
+                    <view class="price-row">
+                        <!-- 价格 -->
+                        <l-price
+                                value="{{p.mainPrice(price,discountPrice)}}"
+                                color="#157658"
+                                value-size="28"
+                                autofix
+                        />
+                        <l-price
+                                wx:if="{{p.slashedPrice(price,discountPrice)}}"
+                                deleted
+                                color="#999"
+                                value-size="26"
+                                l-class="discount-price"
+                                value="{{p.slashedPrice(price,discountPrice)}}"
+                        />
+                        <!-- 库存 -->
+                        <view class="stock" wx:if="{{stock >= 10}}">库存：{{stock}}件</view>
+                        <view class="stock-pinch" wx:if="{{stock < 10}}">仅剩：{{stock}}件</view>
+                    </view>
+                    <!-- 无规格的情况，不需要显示  -->
+                    <view class="sku-pending" wx:if="{{!noSpec}}">
+                        <!--   没有选择的规格    -->
+                        <text class="" wx:if="{{!isSkuIntact}}">请选择：</text>
+                        <!--  规格全选后 显示已选的规格值 -->
+                        <text class="" wx:else>已选：</text>
+                        <!--   待选择的规格名   -->
+                        <text class="" wx:if="{{!isSkuIntact}}">{{missingKeys}}</text>
+                        <!--  已选的规格值 -->
+                        <text class="" wx:else>{{currentValues}}</text>
+                    </view>
                 </view>
             </view>
         </view>
-    </view>
 
-    <view class="hr"/>
+        <view class="hr"/>
 
-    <!--sku多个规格参数-->
-    <block wx:for="{{fences}}" wx:key="index">
-        <m-fence x="{{index}}" bind:celltap="onCellTap" fence="{{item}}"/>
-    </block>
-    <!-- 数量选择器-->
-    <view class="counter-container">
-        <!--   <l-counter/>-->
+        <!--sku多个规格参数-->
+        <block wx:for="{{fences}}" wx:key="index">
+            <m-fence x="{{index}}" bind:celltap="onCellTap" fence="{{item}}"/>
+        </block>
+        <!-- 数量选择器-->
+        <view class="counter-container">
+            <text class="text">购买数量</text>
+            <m-counter bind:lintap="onSelectCount"/>
+        </view>
     </view>
-    <!--    加入购物车 购买 -->
+</scroll-view>
+        <!-- 加入购物车 购买 -->
+<view wx:if="{{!outOfStock}}" class="bottom-btn">
+    <text>{{orderWay}}</text>
+</view>
+        <!--暂时缺货-->
+<view wx:else class="bottom-btn out-stock">
+    <text>暂时缺货</text>
 </view>

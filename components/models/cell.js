@@ -24,6 +24,11 @@ class Cell {
    * spec就是原服务器的规格值对象
    */
   spec;
+  /**
+   * 可视规格 图片地址
+   * @type {string}
+   */
+  skuImg = "";
 
   // specification
   constructor(spec) {

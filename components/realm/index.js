@@ -3,13 +3,16 @@ import {FenceGroup} from "../models/fence-group";
 import {Judger} from "../models/judger";
 import {Spu} from "../../models/spu";
 import {Cell} from "../models/cell";
+import {Cart} from "../../models/cart";
 
 Component({
   /**
    * 组件的属性列表
    */
   properties: {
-    spu: Object
+    spu: Object,
+    // 按钮显示 加入购物车 ，立即购买
+    orderWay: String,
   },
   /**
    * 监听器，这里来处理spu商品的数据。提取规格值
@@ -24,6 +27,7 @@ Component({
         // 有规格的情况
         this.processHasSpec(spu);
       }
+      this.triggerSpecEvent();
     }
   },
 
@@ -47,9 +51,13 @@ Component({
     // 是否选择了完整的sku规格
     isSkuIntact: Boolean,
     // 已选规格值
-    currentValues:Array,
+    currentValues: Array,
     // 未选规格名
-    missingKeys:Array,
+    missingKeys: Array,
+    // 是否缺货
+    outOfStock: Boolean,
+    // 当前选中的购买数量
+    currentSkuCount: Cart.SKU_MIN_COUNT,
   },
 
   /**
@@ -85,10 +93,31 @@ Component({
         const currentSku = judger.getDeterminateSku();
         // 切换新的sku数据
         this.bindSkuData(currentSku);
+        this.setStockStatus(currentSku.stock, this.data.currentSkuCount);
       }
       // 是否选中完整sku
       this.bindTipData();
       this.bindFenceGroupData(judger.fenceGroup);
+      this.triggerSpecEvent();
+    },
+    /**
+     * 是否超出库存量
+     * @param stock 总库存量
+     * @param currentCount 当前点击的购买数量
+     * @return {boolean} 缺货 或者不缺货
+     */
+    isOutOfStock(stock, currentCount) {
+      return stock < currentCount;
+    },
+    /**
+     * 绑定数据 是否缺货
+     * @param stock
+     * @param currentCount
+     */
+    setStockStatus(stock, currentCount) {
+      this.setData({
+        outOfStock: this.isOutOfStock(stock, currentCount),
+      });
     },
     /**
      * 绑定默认spu的图片
@@ -135,6 +164,8 @@ Component({
       });
       // 无规格的情况，只有一个sku，且sku下面的specs是为空的
       this.bindSkuData(spu.sku_list[0]);
+      // 缺货控制
+      this.setStockStatus(spu.sku_list[0].stock, this.data.currentSkuCount);
       // 没有规格 不需要初始化矩阵 也没有规格矩阵
       // return;
     },
@@ -153,11 +184,41 @@ Component({
       const defaultSku = this.data.judger.fenceGroup.getDefaultSku();
       if (defaultSku) {
         this.bindSkuData(defaultSku);
+        // 缺货控制
+        this.setStockStatus(defaultSku.stock, this.data.currentSkuCount);
       } else {
         this.bindSpuData();
       }
       this.bindTipData();
       this.bindFenceGroupData(fenceGroup);
     },
+    /**
+     * 获取已选的数量 点击按钮增加或者减少购买数量触发该回调函数，并进行是否缺货的判断
+     * @param event
+     */
+    onSelectCount(event) {
+      this.data.currentSkuCount = event.detail.count;
+      if (this.data.judger.isSkuIntact()) {
+        this.setStockStatus(this.data.judger.getDeterminateSku().stock, event.detail.count);
+      }
+    },
+    /**
+     * 规格发生改变时，将改变的一些规格数据传递出去
+     */
+    triggerSpecEvent() {
+      const noSpec = Spu.isNoSpec(this.properties.spu);
+      if (noSpec) {
+        this.triggerEvent("specChange", {
+          noSpec,
+        });
+      } else {
+        this.triggerEvent("specChange", {
+          noSpec,
+          isSkuIntact: this.data.judger.isSkuIntact(),
+          currentValues: this.data.judger.getCurrentSpecValues(),
+          missingKeys: this.data.judger.getMissingSpecKeys(),
+        });
+      }
+    }
   }
 })

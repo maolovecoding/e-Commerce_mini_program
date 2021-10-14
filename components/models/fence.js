@@ -46,6 +46,28 @@ class Fence {
     });
   }
 
+  setFenceSketch(skuList) {
+    this.cells.forEach(cell => {
+      this._setCellSkuImg(cell, skuList);
+    });
+  }
+
+  /**
+   * 设置可视的sku的图片到cell上
+   * TODO 其实cell的数量和sku的数量不是对应的，因为可能多个sku都是同一种颜色，或者是同一种图案啊等等
+   * @param cell
+   * @param skuList
+   * @private
+   */
+  _setCellSkuImg(cell, skuList) {
+    // 拿到规格的规格值 1-11#2-22#3-33
+    const specCode = cell.getCellCode();
+    // 找到匹配的sku
+    const matchSku = skuList.find(sku => sku.code.includes(specCode));
+    // 将sku的图片规格 放到cell的属性里面 当做可视规格
+    cell.skuImg = matchSku?.img;
+  }
+
   /**
    * 整理规格值
    * @param title

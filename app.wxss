@@ -1,6 +1,31 @@
 /**app.wxss**/
 
 /* 设置背景颜色 */
-page{
-  background-color: #f5f5f5;
+page {
+    background-color: #f5f5f5;
+}
+
+/* 字体库  在线图标库 */
+@font-face {
+    font-family: 'sleeve';  /* Project id 2860153 */
+    src: url('//at.alicdn.com/t/font_2860153_ab6iqx5idpg.woff2?t=1633953395359') format('woff2'),
+    url('//at.alicdn.com/t/font_2860153_ab6iqx5idpg.woff?t=1633953395359') format('woff'),
+    url('//at.alicdn.com/t/font_2860153_ab6iqx5idpg.ttf?t=1633953395359') format('truetype');
+}
+
+/*字体图标的外部样式类，告诉icon组件，引用这个*/
+.sleeve {
+    font-family: "sleeve" !important;
+    font-size: 16px;
+    font-style: normal;
+}
+
+/*自定义icon的名称 前缀 l-icon-是固定的
+后面是我们自定义的名称 name属性的值到时候就设置为这个 */
+.l-icon-home:before {
+    content: "\e64f"
+}
+
+.l-icon-shopping-cart:before {
+    content: "\e600"
 }

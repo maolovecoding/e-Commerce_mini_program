@@ -1,4 +1,56 @@
 <!--pages/detail/detail.wxml-->
-<view class="container">
-    <m-realm spu="{{spu}}"/>
+        <!-- 解决滚动条，不让滚动条出现 -->
+<view>
+    <!--  商品轮播图  -->
+    <swiper class="top" autoplay indicator-dots
+            indicator-active-color="#157658"
+            interval="2000" circular duration="700">
+        <block wx:for="{{spu.spu_img_list}}" wx:key="id">
+            <swiper-item>
+                <image class="top" src="{{item.img}}" mode="aspectFill"/>
+            </swiper-item>
+        </block>
+    </swiper>
+    <!-- 商品信息 -->
+    <m-spu-description spu="{{spu}}"/>
+    <!--  已选规格  -->
+    <!-- 绑定加入购物车事件 -->
+    <view bind:tap="onAddToCart" class="sku-pending" wx:if="{{!specs.noSpec}}">
+        <view class="specs">
+            <!--   没有选择的规格    -->
+            <text class="" wx:if="{{!specs.isSkuIntact}}">请选择：</text>
+            <!--  规格全选后 显示已选的规格值 -->
+            <text class="" wx:else>已选：</text>
+            <!--   待选择的规格名   -->
+            <text class="" wx:if="{{!specs.isSkuIntact}}">{{specs.missingKeys}}</text>
+            <!--  已选的规格值 -->
+            <text class="" wx:else>{{specs.currentValues}}</text>
+        </view>
+        <view class="arrow-right">
+            <l-icon name="right" color="#157658" size="24"/>
+        </view>
+    </view>
+    <!--  商品相关信息  -->
+    <view class="explain">
+        <m-sale-explain texts="{{explain}}"/>
+    </view>
+    <!--  商品详情图   -->
+    <view class="detail-img-container">
+        <block wx:for="{{spu.spu_detail_img_list}}" wx:key="index">
+            <image mode="widthFix" src="{{item.img}}" class="detail-img"></image>
+        </block>
+    </view>
 </view>
+        <!--<view class="container">-->
+        <!-- 弹出商品详情页 -->
+        <!--  从底部弹出  -->
+<l-popup show="{{showRealm}}" content-align="bottom">
+    <m-realm bind:specChange="onSpecChange" spu="{{spu}}" orderWay="{{orderWay}}"/>
+</l-popup>
+<m-tabbar class="tab-bar"
+          bind:goToCart="onGoToCart"
+          bind:goToHome="onGoToHome"
+          bind:addToCart="onAddToCart"
+          bind:buy="onBuy"
+/>
+        <!--</view>-->
