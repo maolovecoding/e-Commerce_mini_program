@@ -1,6 +1,6 @@
 <!--pages/detail/detail.wxml-->
         <!-- 解决滚动条，不让滚动条出现 -->
-<view>
+<scroll-view style="height:{{h}}rpx;" scroll-y>
     <!--  商品轮播图  -->
     <swiper class="top" autoplay indicator-dots
             indicator-active-color="#157658"
@@ -40,7 +40,7 @@
             <image mode="widthFix" src="{{item.img}}" class="detail-img"></image>
         </block>
     </view>
-</view>
+</scroll-view>
         <!--<view class="container">-->
         <!-- 弹出商品详情页 -->
         <!--  从底部弹出  -->

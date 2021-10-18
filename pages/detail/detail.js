@@ -1,6 +1,7 @@
 // pages/detail/detail.js
 import {Spu} from "../../models/spu";
 import {SaleExplain} from "../../models/sale-explain";
+import {getWindowHeightRpx} from "../../utils/system";
 
 Page({
 
@@ -17,7 +18,9 @@ Page({
     // 用户选中的规格 和规格值 是否有规格的sku
     specs: null,
     // 商品的描述文本 数组
-    explain:Array,
+    explain: Array,
+    // 滚动高度 可滚区域
+    h: 0,
   },
 
   /**
@@ -26,9 +29,12 @@ Page({
   async onLoad({pid}) {
     const spu = await Spu.getDetail(pid);
     const explain = await SaleExplain.getFixed();
+    const windowHeight = await getWindowHeightRpx();
+    const h = windowHeight - 100;
     this.setData({
       spu,
-      explain
+      explain,
+      h,
     });
   },
 
